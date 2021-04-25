@@ -79,7 +79,7 @@ APT_OPTIONS="$APT_OPTIONS -o dir::etc::sourcelist=$APT_SOURCES -o dir::etc::sour
 
 topic "Updating apt caches"
 mkdir -p "$CACHE_DIR/.dpkg"
-dpkg --add-architecture i386 --admindir="$CACHE_DIR/.dpkg"
+dpkg --admindir="$CACHE_DIR/.dpkg" --add-architecture i386
 apt-get $APT_OPTIONS update | indent
 
 for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e '^#' | grep -v -s -e "^:repo:"); do

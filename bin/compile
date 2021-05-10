@@ -8,6 +8,8 @@ set -eo pipefail
 # set -x
 
 # parse and derive params
+unzip
+BP_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
 BUILD_DIR=$1
 CACHE_DIR=$2
 LP_DIR=`cd $(dirname $0); cd ..; pwd`

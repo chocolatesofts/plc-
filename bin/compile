@@ -39,7 +39,7 @@ unzip $BP_DIR/gatewayplc/gatewayplc.zip -d $WINEPREFIX/drive_c
 cp $BP_DIR/gatewayplc/system.reg $WINEPREFIX
 
 topic "Copying data into WINEPREFIX"
-cp $BUILD_DIR/data $WINEPREFIX/drive_c/
+cp -f $BUILD_DIR/data $WINEPREFIX/drive_c/
 
 topic "Merging with static data"
 unzip $BP_DIR/gatewayplc/data-static.zip -d $WINEPREFIX/drive_c

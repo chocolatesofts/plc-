@@ -8,7 +8,6 @@ set -eo pipefail
 # set -x
 
 # parse and derive params
-unzip
 BP_DIR=$(cd "$(dirname "${0:-}")"; cd ..; pwd)
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -30,6 +29,20 @@ function indent() {
     *)      sed -u "$c";;
   esac
 }
+topic "Unzipping codemeter"
+unzip $BP_DIR/codemeter/codemeter.zip -d $BUILD_DIR
+
+topic "Preparing WINEPREFIX"
+WINEPREFIX=$BUILD_DIR/.wine
+mkdir -p $WINEPREFIX/drive_c
+unzip $BP_DIR/gatewayplc/gatewayplc.zip -d $WINEPREFIX/drive_c
+cp $BP_DIR/gatewayplc/system.reg $WINEPREFIX
+
+topic "Copying data into WINEPREFIX"
+cp $BUILD_DIR/data $WINEPREFIX/drive_c/
+
+topic "Merging with static data"
+unzip $BP_DIR/gatewayplc/data-static.zip -d $WINEPREFIX/drive_c
 
 # Store which STACK we are running on in the cache to bust the cache if it changes
 if [ -f $CACHE_DIR/.apt/STACK ]; then
@@ -103,7 +116,7 @@ for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   dpkg -x $DEB $BUILD_DIR/.apt/
 done
 
-topic "Writing profile script"
+topic "Writing profile scripts"
 mkdir -p $BUILD_DIR/.profile.d
 cat <<EOF >$BUILD_DIR/.profile.d/000_apt.sh
 export PATH="\$HOME/.apt/usr/bin:\$PATH"
@@ -113,6 +126,11 @@ export INCLUDE_PATH="\$HOME/.apt/usr/include:\$HOME/.apt/usr/include/x86_64-linu
 export CPATH="\$INCLUDE_PATH"
 export CPPPATH="\$INCLUDE_PATH"
 export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
+EOF
+
+topic "Writing GatewayPLC PORT replacement script"
+cat <<EOF >$BUILD_DIR/.profile.d/000_gatewayplc.sh
+sed -i \""s/{port}/$(cat $BUILD_DIR/port)"\" "\$HOME/.wine/drive_c/data/CODESYSControl.cfg"
 EOF
 
 export PATH="$BUILD_DIR/.apt/usr/bin:$PATH"

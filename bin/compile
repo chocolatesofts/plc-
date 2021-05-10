@@ -130,7 +130,7 @@ EOF
 
 topic "Writing GatewayPLC PORT replacement script"
 cat <<EOF >$BUILD_DIR/.profile.d/000_gatewayplc.sh
-sed -i \""s/{port}/$(cat $BUILD_DIR/port)"\" "\$HOME/.wine/drive_c/data/CODESYSControl.cfg"
+sed -i "s/{port}/$(cat $BUILD_DIR/port)" "\$HOME/.wine/drive_c/data/CODESYSControl.cfg"
 EOF
 
 export PATH="$BUILD_DIR/.apt/usr/bin:$PATH"

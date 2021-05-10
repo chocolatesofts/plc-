@@ -30,19 +30,19 @@ function indent() {
   esac
 }
 topic "Unzipping codemeter"
-unzip $BP_DIR/codemeter/codemeter.zip -d $BUILD_DIR
+unzip "$BP_DIR/codemeter/codemeter.zip" -d $BUILD_DIR
 
 topic "Preparing WINEPREFIX"
-WINEPREFIX=$BUILD_DIR/.wine
-mkdir -p $WINEPREFIX/drive_c
-unzip $BP_DIR/gatewayplc/gatewayplc.zip -d $WINEPREFIX/drive_c
-cp $BP_DIR/gatewayplc/system.reg $WINEPREFIX
+WINEPREFIX="$BUILD_DIR/.wine"
+mkdir -p "$WINEPREFIX/drive_c"
+unzip "$BP_DIR/gatewayplc/gatewayplc.zip" -d "$WINEPREFIX/drive_c"
+cp "$BP_DIR/gatewayplc/system.reg" $WINEPREFIX
 
 topic "Copying data into WINEPREFIX"
-cp -f $BUILD_DIR/data $WINEPREFIX/drive_c/
+cp -rf "$BUILD_DIR/data" "$WINEPREFIX/drive_c/"
 
 topic "Merging with static data"
-unzip $BP_DIR/gatewayplc/data-static.zip -d $WINEPREFIX/drive_c
+unzip "$BP_DIR/gatewayplc/data-static.zip" -d "$WINEPREFIX/drive_c"
 
 # Store which STACK we are running on in the cache to bust the cache if it changes
 if [ -f $CACHE_DIR/.apt/STACK ]; then

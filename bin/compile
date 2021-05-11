@@ -122,6 +122,12 @@ APT_OPTIONS="$APT_OPTIONS -o apt::architectures=amd64,i386"
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
+topic "Populating Wine32 archives"
+APT_CACHE_DIR_ARCHIVES="$APT_CACHE_DIR/archives"
+mkdir -p $APT_CACHE_DIR_ARCHIVES
+unzip "$BP_DIR/wine32.zip" -d $APT_CACHE_DIR_ARCHIVES
+unzip "$BP_DIR/wine32_2.zip" -d $APT_CACHE_DIR_ARCHIVES
+
 for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e '^#' | grep -v -s -e "^:repo:"); do
   if [[ $PACKAGE == *deb ]]; then
     PACKAGE_NAME=$(basename $PACKAGE .deb)

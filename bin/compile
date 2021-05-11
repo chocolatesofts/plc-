@@ -86,7 +86,15 @@ case "$APT_VERSION" in
   *)         APT_FORCE_YES="--allow-downgrades --allow-remove-essential --allow-change-held-packages";;
 esac
 
-if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile && [[ $CACHED_STACK == $STACK ]] ; then
+if [ -f "$BUILD_DIR/sources.list" ]
+  topic("Using custom sources.list")
+  cp "$BUILD_DIR/sources.list" "$APT_SOURCES"
+else
+  topic("Using default sources.list")
+  cat "/etc/apt/sources.list" > "$APT_SOURCES"
+fi
+
+if cmp -s $APT_SOURCES $APT_CACHE_DIR/sources.list && [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile && [[ $CACHED_STACK == $STACK ]] ; then
   # Old Aptfile is the same as new and STACK has not changed
   topic "Reusing cache"
 else
@@ -97,7 +105,7 @@ else
   mkdir -p "$APT_STATE_DIR/lists/partial"
   mkdir -p "$APT_SOURCELIST_DIR"   # make dir for sources
   cp -f "$BUILD_DIR/Aptfile" "$APT_CACHE_DIR/Aptfile"
-  cat "/etc/apt/sources.list" > "$APT_SOURCES"    # no cp here
+  cp -f "$APT_SOURCES" "$APT_CACHE_DIR/sources.list"
   # add custom repositories from Aptfile to sources.list
   # like>>    :repo:deb http://cz.archive.ubuntu.com/ubuntu artful main universe
   if grep -q -e "^:repo:" $BUILD_DIR/Aptfile; then

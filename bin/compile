@@ -30,23 +30,31 @@ function indent() {
   esac
 }
 topic "Unzipping codemeter"
+CODEMETER_RUNTIME="\$HOME/codemeter"
 unzip "$BP_DIR/codemeter/codemeter.zip" -d $BUILD_DIR
 
 topic "Preparing WINEPREFIX"
 WINEPREFIX="$BUILD_DIR/.wine"
+WINEPREFIX_RUNTIME="\$HOME/.wine"
+WINE_CDRIVE="$WINEPREFIX/drive_c"
+WINE_CDRIVE_RUNTIME="$WINEPREFIX_RUNTIME/drive_c"
+GATEWAYPLC="$WINE_CDRIVE/gatewayplc"
+GATEWAYPLC_RUNTIME="$WINE_CDRIVE_RUNTIME/gatewayplc"
+
 mkdir -p "$WINEPREFIX/drive_c"
-unzip "$BP_DIR/gatewayplc/gatewayplc.zip" -d "$WINEPREFIX/drive_c"
+unzip "$BP_DIR/gatewayplc/gatewayplc.zip" -d $WINEPREFIX_CDRIVE
 cp "$BP_DIR/gatewayplc/system.reg" $WINEPREFIX
 
 topic "Copying data into WINEPREFIX"
-cp -rf "$BUILD_DIR/data" "$WINEPREFIX/drive_c/"
+cp -rf "$BUILD_DIR/data" $WINEPREFIX_CDRIVE
 
 topic "Merging with static data"
-unzip "$BP_DIR/gatewayplc/data-static.zip" -d "$WINEPREFIX/drive_c"
+unzip "$BP_DIR/gatewayplc/data-static.zip" -d $WINEPREFIX_CDRIVE
 
 topic "Writing GatewayPLC PORT replacement script"
-cat <<EOF >"$WINEPREFIX/drive_c/gatewayplc/gatewayplc.sh"
-sed -i "s/{port}/$(cat $BUILD_DIR/port)" "\$HOME/.wine/drive_c/data/CODESYSControl.cfg"
+$GATEWAYPLC_REPLACE="$GATEWAYPLC_RUNTIME/gatewayplc.sh"
+cat <<EOF >"$GATEWAYPLC/gatewayplc.sh"
+sed -i "s/{port}/$(cat $BUILD_DIR/port)" "$WINE_CDRIVE_RUNTIME/data/CODESYSControl.cfg"
 EOF
 
 # Store which STACK we are running on in the cache to bust the cache if it changes
@@ -131,6 +139,12 @@ export INCLUDE_PATH="\$HOME/.apt/usr/include:\$HOME/.apt/usr/include/x86_64-linu
 export CPATH="\$INCLUDE_PATH"
 export CPPPATH="\$INCLUDE_PATH"
 export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
+EOF
+
+cat <<EOF >$BUILD_DIR/.profile.d/000_gatewayplc.sh
+export GATEWAYPLC="$GATEWAYPLC_RUNTIME"
+export GATEWAYPLC_REPLACE="$GATEWAYPLC_REPLACE"
+export CODEMETER="$CODEMETER_RUNTIME"
 EOF
 
 export PATH="$BUILD_DIR/.apt/usr/bin:$PATH"

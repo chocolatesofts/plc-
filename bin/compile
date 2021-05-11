@@ -52,7 +52,7 @@ topic "Merging with static data"
 unzip "$BP_DIR/gatewayplc/data-static.zip" -d $WINE_CDRIVE
 
 topic "Writing GatewayPLC PORT replacement script"
-$GATEWAYPLC_REPLACE="$GATEWAYPLC_RUNTIME/gatewayplc.sh"
+GATEWAYPLC_REPLACE="$GATEWAYPLC_RUNTIME/gatewayplc.sh"
 cat <<EOF >"$GATEWAYPLC/gatewayplc.sh"
 sed -i "s/{port}/$(cat $BUILD_DIR/port)" "$WINE_CDRIVE_RUNTIME/data/CODESYSControl.cfg"
 EOF

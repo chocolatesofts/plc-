@@ -44,6 +44,11 @@ cp -rf "$BUILD_DIR/data" "$WINEPREFIX/drive_c/"
 topic "Merging with static data"
 unzip "$BP_DIR/gatewayplc/data-static.zip" -d "$WINEPREFIX/drive_c"
 
+topic "Writing GatewayPLC PORT replacement script"
+cat <<EOF >"$WINEPREFIX/drive_c/gatewayplc/gatewayplc.sh"
+sed -i "s/{port}/$(cat $BUILD_DIR/port)" "\$HOME/.wine/drive_c/data/CODESYSControl.cfg"
+EOF
+
 # Store which STACK we are running on in the cache to bust the cache if it changes
 if [ -f $CACHE_DIR/.apt/STACK ]; then
   CACHED_STACK=$(cat "$CACHE_DIR/.apt/STACK")
@@ -126,11 +131,6 @@ export INCLUDE_PATH="\$HOME/.apt/usr/include:\$HOME/.apt/usr/include/x86_64-linu
 export CPATH="\$INCLUDE_PATH"
 export CPPPATH="\$INCLUDE_PATH"
 export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/i386-linux-gnu/pkgconfig:\$HOME/.apt/usr/lib/pkgconfig:\$PKG_CONFIG_PATH"
-EOF
-
-topic "Writing GatewayPLC PORT replacement script"
-cat <<EOF >$BUILD_DIR/.profile.d/000_gatewayplc.sh
-sed -i "s/{port}/$(cat $BUILD_DIR/port)" "\$HOME/.wine/drive_c/data/CODESYSControl.cfg"
 EOF
 
 export PATH="$BUILD_DIR/.apt/usr/bin:$PATH"

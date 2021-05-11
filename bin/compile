@@ -33,6 +33,10 @@ topic "Unzipping codemeter"
 CODEMETER_RUNTIME="\$HOME/codemeter"
 unzip "$BP_DIR/codemeter/codemeter.zip" -d $BUILD_DIR
 
+topic "Copying codemeter patch"
+CODEMETER_PATCH="$CODEMETER_RUNTIME/codemeter-patch.out"
+cp "$BP_DIR/codemeter/codemeter-patch.out" "$BUILD_DIR/codemeter"
+
 topic "Preparing WINEPREFIX"
 WINEPREFIX="$BUILD_DIR/.wine"
 WINEPREFIX_RUNTIME="\$HOME/.wine"

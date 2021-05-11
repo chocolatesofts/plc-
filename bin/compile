@@ -88,7 +88,7 @@ esac
 
 if [ -f "$BUILD_DIR/sources.list" ]
   topic "Using custom sources.list"
-  cp "$BUILD_DIR/sources.list" "$APT_SOURCES"
+  cp -f "$BUILD_DIR/sources.list" "$APT_SOURCES"
 else
   topic "Using default sources.list"
   cat "/etc/apt/sources.list" > "$APT_SOURCES"

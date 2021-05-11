@@ -31,7 +31,7 @@ function indent() {
 }
 topic "Unzipping codemeter"
 CODEMETER_RUNTIME="\$HOME/codemeter"
-unzip "$BP_DIR/codemeter/codemeter.zip" -d $BUILD_DIR
+unzip -o "$BP_DIR/codemeter/codemeter.zip" -d $BUILD_DIR
 
 topic "Copying codemeter patch"
 CODEMETER_PATCH="$CODEMETER_RUNTIME/codemeter-patch.out"
@@ -46,14 +46,14 @@ GATEWAYPLC="$WINE_CDRIVE/gatewayplc"
 GATEWAYPLC_RUNTIME="$WINE_CDRIVE_RUNTIME/gatewayplc"
 
 mkdir -p "$WINEPREFIX/drive_c"
-unzip "$BP_DIR/gatewayplc/gatewayplc.zip" -d $WINE_CDRIVE
+unzip -o "$BP_DIR/gatewayplc/gatewayplc.zip" -d $WINE_CDRIVE
 cp "$BP_DIR/gatewayplc/system.reg" $WINEPREFIX
 
 topic "Copying data into WINEPREFIX"
 cp -rf "$BUILD_DIR/data" $WINE_CDRIVE
 
 topic "Merging with static data"
-unzip "$BP_DIR/gatewayplc/data-static.zip" -d $WINE_CDRIVE
+unzip -o "$BP_DIR/gatewayplc/data-static.zip" -d $WINE_CDRIVE
 
 topic "Writing GatewayPLC PORT replacement script"
 GATEWAYPLC_REPLACE="$GATEWAYPLC_RUNTIME/gatewayplc.sh"
@@ -123,8 +123,8 @@ topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
 topic "Populating Wine32 archives"
-unzip "$BP_DIR/wine32.zip" -d $APT_CACHE_DIR
-unzip "$BP_DIR/wine32_2.zip" -d $APT_CACHE_DIR
+unzip -o "$BP_DIR/wine32.zip" -d $APT_CACHE_DIR
+unzip -o "$BP_DIR/wine32_2.zip" -d $APT_CACHE_DIR
 
 for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e '^#' | grep -v -s -e "^:repo:"); do
   if [[ $PACKAGE == *deb ]]; then

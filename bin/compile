@@ -56,6 +56,7 @@ GATEWAYPLC_REPLACE="$GATEWAYPLC_RUNTIME/gatewayplc.sh"
 cat <<EOF >"$GATEWAYPLC/gatewayplc.sh"
 sed -i "s/{port}/$(cat $BUILD_DIR/port)" "$WINE_CDRIVE_RUNTIME/data/CODESYSControl.cfg"
 EOF
+chmod 777 "$GATEWAYPLC/gatewayplc.sh"
 
 # Store which STACK we are running on in the cache to bust the cache if it changes
 if [ -f $CACHE_DIR/.apt/STACK ]; then

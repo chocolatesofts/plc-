@@ -86,7 +86,7 @@ case "$APT_VERSION" in
   *)         APT_FORCE_YES="--allow-downgrades --allow-remove-essential --allow-change-held-packages";;
 esac
 
-if [ -f "$BUILD_DIR/sources.list" ]
+if [ -f "$BUILD_DIR/sources.list" ] ; then
   topic "Using custom sources.list"
   cp -f "$BUILD_DIR/sources.list" "$APT_SOURCES"
 else

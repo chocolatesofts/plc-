@@ -42,14 +42,14 @@ GATEWAYPLC="$WINE_CDRIVE/gatewayplc"
 GATEWAYPLC_RUNTIME="$WINE_CDRIVE_RUNTIME/gatewayplc"
 
 mkdir -p "$WINEPREFIX/drive_c"
-unzip "$BP_DIR/gatewayplc/gatewayplc.zip" -d $WINEPREFIX_CDRIVE
+unzip "$BP_DIR/gatewayplc/gatewayplc.zip" -d $WINE_CDRIVE
 cp "$BP_DIR/gatewayplc/system.reg" $WINEPREFIX
 
 topic "Copying data into WINEPREFIX"
-cp -rf "$BUILD_DIR/data" $WINEPREFIX_CDRIVE
+cp -rf "$BUILD_DIR/data" $WINE_CDRIVE
 
 topic "Merging with static data"
-unzip "$BP_DIR/gatewayplc/data-static.zip" -d $WINEPREFIX_CDRIVE
+unzip "$BP_DIR/gatewayplc/data-static.zip" -d $WINE_CDRIVE
 
 topic "Writing GatewayPLC PORT replacement script"
 $GATEWAYPLC_REPLACE="$GATEWAYPLC_RUNTIME/gatewayplc.sh"

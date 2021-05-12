@@ -86,6 +86,7 @@ case "$APT_VERSION" in
   *)         APT_FORCE_YES="--allow-downgrades --allow-remove-essential --allow-change-held-packages";;
 esac
 
+mkdir -p "$APT_SOURCELIST_DIR"   # make dir for sources
 if [ -f "$BUILD_DIR/sources.list" ] ; then
   topic "Using custom sources.list"
   cp -f "$BUILD_DIR/sources.list" "$APT_SOURCES"
@@ -103,7 +104,6 @@ else
   rm -rf $APT_CACHE_DIR
   mkdir -p "$APT_CACHE_DIR/archives/partial"
   mkdir -p "$APT_STATE_DIR/lists/partial"
-  mkdir -p "$APT_SOURCELIST_DIR"   # make dir for sources
   cp -f "$BUILD_DIR/Aptfile" "$APT_CACHE_DIR/Aptfile"
   cp -f "$APT_SOURCES" "$APT_CACHE_DIR/sources.list"
   # add custom repositories from Aptfile to sources.list
@@ -145,6 +145,10 @@ for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   topic "Installing $(basename $DEB)"
   dpkg -x $DEB $BUILD_DIR/.apt/
 done
+
+topic "Copying Wine configurations"
+cp -f "$BP_DIR/wine/wine-development" "$BUILD_DIR/.apt/usr/bin"
+cp -f "$BP_DIR/wine/wineserver" "$BUILD_DIR/.apt/usr/lib"
 
 topic "Writing profile scripts"
 mkdir -p $BUILD_DIR/.profile.d

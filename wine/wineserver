@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+wineserver32=$HOME/.apt/usr/lib/wine-development/wineserver32
+wineserver64=/usr/lib/wine-development/wineserver64
+
+if test -x "$wineserver64"; then
+    wineserver=$wineserver64
+elif test -x "$wineserver32"; then
+    wineserver=$wineserver32
+else
+    echo "error: unable to find wineserver executable." >&2
+    echo "wine32-development and/or wine64-development must be installed." >&2
+    exit 1
+fi
+
+exec $wineserver -p0 "$@"

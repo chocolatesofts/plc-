@@ -29,13 +29,8 @@ function indent() {
     *)      sed -u "$c";;
   esac
 }
-topic "Unzipping codemeter"
-CODEMETER_RUNTIME="\$HOME/codemeter"
-unzip -o "$BP_DIR/codemeter/codemeter.zip" -d $BUILD_DIR
 
-topic "Copying codemeter patch"
-CODEMETER_PATCH="$CODEMETER_RUNTIME/codemeter-patch.out"
-cp "$BP_DIR/codemeter/codemeter-patch.out" "$BUILD_DIR/codemeter"
+CODEMETER_RELAY="\$HOME/codemeter/relay.py"
 
 topic "Preparing WINEPREFIX"
 WINEPREFIX="$BUILD_DIR/.wine"
@@ -161,8 +156,8 @@ EOF
 cat <<EOF >$BUILD_DIR/.profile.d/000_gatewayplc.sh
 export GATEWAYPLC="$GATEWAYPLC_RUNTIME"
 export GATEWAYPLC_REPLACE="$GATEWAYPLC_REPLACE"
-export CODEMETER_DIR="$CODEMETER_RUNTIME"
-export CODEMETER="$CODEMETER_PATCH"
+export CODEMETER="$CODEMETER_RELAY"
+export CODEMETER_SOCKET="$(cat $BUILD_DIR/codemeter)"
 EOF
 
 export PATH="$BUILD_DIR/.apt/usr/bin:$PATH"
